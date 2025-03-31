@@ -43,7 +43,6 @@ func partOne(filename string) int {
 	sort.Ints(second)
 
 	total := 0
-
 	for i, _ := range first {
 		diff := abs(second[i] - first[i])
 		total += diff
@@ -59,7 +58,8 @@ func partTwo(filename string) int {
 	}
 	defer file.Close()
 
-	var first, second []int
+	var first []int
+	countMap := make(map[int]int)
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
@@ -69,29 +69,17 @@ func partTwo(filename string) int {
 		num_two, _ := strconv.Atoi(nums[1])
 
 		first = append(first, num_one)
-		second = append(second, num_two)
+		countMap[num_two]++
 	}
 
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
 	}
 
-	sort.Ints(first)
-	sort.Ints(second)
-
 	total := 0
-
-	countMap := make(map[int]int)
-
-	for _, num := range second {
-		countMap[num]++
-	}
-
 	for _, num := range first {
 		total += num * countMap[num]
 	}
-
-	fmt.Println(countMap)
 
 	return total
 }
