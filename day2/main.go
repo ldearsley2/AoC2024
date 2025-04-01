@@ -10,8 +10,9 @@ import (
 )
 
 func main() {
-	fmt.Println(partOne("test_input.txt"))
-	fmt.Println(partOne("input.txt"))
+	fmt.Println(partTwo("test_input.txt"))
+	fmt.Println(partTwo("input.txt"))
+
 }
 
 func partOne(filename string) int {
@@ -46,6 +47,60 @@ func partOne(filename string) int {
 		}
 	}
 	return total
+}
+
+func partTwo(filename string) int {
+	file, err := os.Open(filename)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	var reportList [][]int
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		nums := strings.Fields(line)
+		var report []int
+		for _, v := range nums {
+			n, error := strconv.Atoi(v)
+			if error != nil {
+				fmt.Println("Conversion error:", error)
+			}
+			report = append(report, n)
+		}
+		reportList = append(reportList, report)
+	}
+
+	total := 0
+	for _, report := range reportList {
+		if reportSafeTolerance(report) {
+			total++
+		}
+	}
+
+	return total
+}
+
+func reportSafeTolerance(report []int) bool {
+
+	isSafe := reportSafe(report)
+
+	if !isSafe {
+		for i := 0; i < len(report); i++ {
+			newReport := []int{}
+			newReport = append(newReport, report[:i]...)
+			newReport = append(newReport, report[i+1:]...)
+			isSafe = reportSafe(newReport)
+
+			if isSafe {
+				break
+			}
+		}
+	}
+
+	return isSafe
 }
 
 func reportSafe(report []int) bool {
