@@ -58,7 +58,7 @@ func reportSafe(report []int) bool {
 		increasing = false
 	}
 
-	for i := 1; i < len(report)-1; i++ {
+	for i := 1; i < len(report); i++ {
 		if increasing {
 			diff := report[i] - report[i-1]
 			if !(diff >= 1 && diff <= 3) {
